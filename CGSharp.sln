@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CGSharp", "CGSharp\CGSharp.csproj", "{B4962D42-DC1C-4FA2-99B0-2AEDE7CDE4F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Samples\Sample.csproj", "{388A32EC-F5BA-446F-973C-099669662B1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4962D42-DC1C-4FA2-99B0-2AEDE7CDE4F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4962D42-DC1C-4FA2-99B0-2AEDE7CDE4F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4962D42-DC1C-4FA2-99B0-2AEDE7CDE4F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4962D42-DC1C-4FA2-99B0-2AEDE7CDE4F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{388A32EC-F5BA-446F-973C-099669662B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{388A32EC-F5BA-446F-973C-099669662B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{388A32EC-F5BA-446F-973C-099669662B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{388A32EC-F5BA-446F-973C-099669662B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E0CE0330-4401-4C3C-AD73-8E24130AE845}
+	EndGlobalSection
+EndGlobal
