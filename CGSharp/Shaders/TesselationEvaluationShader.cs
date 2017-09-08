@@ -12,9 +12,6 @@ namespace CGSharp.Shaders
         {
         }
 
-        protected override ShaderType Type()
-        {
-            return ShaderType.TessEvaluationShader;
-        }
+        protected override ShaderType Type() => ShaderType.TessEvaluationShader;
     }
 }

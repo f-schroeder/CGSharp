@@ -11,9 +11,6 @@ namespace CGSharp.Shaders
         {
         }
 
-        protected override ShaderType Type()
-        {
-            return ShaderType.FragmentShader;
-        }
+        protected override ShaderType Type() => ShaderType.FragmentShader;
     }
 }

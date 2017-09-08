@@ -9,6 +9,7 @@ using Boolean = OpenTK.Graphics.OpenGL.Boolean;
 
 //TODO: Documentation!
 //TODO: Extract program inputs and outputs? --> automatic FBO and VBO/VAO creation?
+//TODO: differentiate extracted uniforms between numbers, samplers ans images
 
 namespace CGSharp.Shaders
 {
@@ -28,7 +29,7 @@ namespace CGSharp.Shaders
 
         protected void ExtractUniforms()
         {
-            Dictionary<string, int> uniforms = new Dictionary<string, int>();
+            var uniforms = new Dictionary<string, int>();
 
             int numUniforms;
             GL.GetProgramInterface(ID, ProgramInterface.Uniform, ProgramInterfaceParameter.ActiveResources, out numUniforms);
@@ -43,7 +44,7 @@ namespace CGSharp.Shaders
                 if (values[0] != -1 || values[2] < 1)
                     continue;
 
-                StringBuilder name = new StringBuilder();
+                var name = new StringBuilder();
                 //Need to disable this warning because indeed it is the correct usage of the function.
                 #pragma warning disable 618
                 GL.GetProgramResourceName(ID, ProgramInterface.Uniform, uniformID, values[2], out int _, name);
@@ -58,7 +59,7 @@ namespace CGSharp.Shaders
 
         protected void ExtractBuffers()
         {
-            Dictionary<string, int> buffers = new Dictionary<string, int>();
+            var buffers = new Dictionary<string, int>();
 
             int numBuffers;
             GL.GetProgramInterface(ID, ProgramInterface.ShaderStorageBlock, ProgramInterfaceParameter.ActiveResources, out numBuffers);
@@ -73,7 +74,7 @@ namespace CGSharp.Shaders
                 if (values[0] < 1)
                     continue;
 
-                StringBuilder name = new StringBuilder();
+                var name = new StringBuilder();
                 //Need to disable this warning because indeed it is the correct usage of the function.
                 #pragma warning disable 618
                 GL.GetProgramResourceName(ID, ProgramInterface.ShaderStorageBlock, bufferID, values[0], out int _, name);
@@ -115,40 +116,23 @@ namespace CGSharp.Shaders
             }
         }
 
-        public void SetUniform(string name, int value)
-        {
-            GL.ProgramUniform1(ID, Uniforms[name], value);
-        }
+        #region SetUniform expressions
 
-        public void SetUniform(string name, float value)
-        {
-            GL.ProgramUniform1(ID, Uniforms[name], value);
-        }
+        public void SetUniform(string name, int value) => GL.ProgramUniform1(ID, Uniforms[name], value);
 
-        public void SetUniform(string name, ref Vector2 value)
-        {
-            GL.ProgramUniform2(ID, Uniforms[name], ref value);
-        }
+        public void SetUniform(string name, float value) => GL.ProgramUniform1(ID, Uniforms[name], value);
 
-        public void SetUniform(string name, ref Vector3 value)
-        {
-            GL.ProgramUniform3(ID, Uniforms[name], ref value);
-        }
+        public void SetUniform(string name, ref Vector2 value) => GL.ProgramUniform2(ID, Uniforms[name], ref value);
 
-        public void SetUniform(string name, ref Vector4 value)
-        {
-            GL.ProgramUniform4(ID, Uniforms[name], ref value);
-        }
+        public void SetUniform(string name, ref Vector3 value) => GL.ProgramUniform3(ID, Uniforms[name], ref value);
 
-        public void SetUniform(string name, ref Matrix3 value)
-        {
-            GL.ProgramUniformMatrix3(ID, Uniforms[name], false, ref value);
-        }
+        public void SetUniform(string name, ref Vector4 value) => GL.ProgramUniform4(ID, Uniforms[name], ref value);
 
-        public void SetUniform(string name, ref Matrix4 value)
-        {
-            GL.ProgramUniformMatrix4(ID, Uniforms[name], false, ref value);
-        }
+        public void SetUniform(string name, ref Matrix3 value) => GL.ProgramUniformMatrix3(ID, Uniforms[name], false, ref value);
+
+        public void SetUniform(string name, ref Matrix4 value) => GL.ProgramUniformMatrix4(ID, Uniforms[name], false, ref value);
+
+        #endregion
 
         protected virtual void Dispose(bool disposing)
         {

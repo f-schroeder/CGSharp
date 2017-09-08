@@ -55,10 +55,7 @@ namespace CGSharp.Shaders
             CreateIndirectBuffer();
         }
 
-        protected override ShaderType Type()
-        {
-            return ShaderType.ComputeShader;
-        }
+        protected override ShaderType Type() => ShaderType.ComputeShader;
 
         protected void CreateIndirectBuffer()
         {

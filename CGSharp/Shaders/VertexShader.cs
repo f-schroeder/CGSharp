@@ -12,9 +12,6 @@ namespace CGSharp.Shaders
         {
         }
 
-        protected override ShaderType Type()
-        {
-            return ShaderType.VertexShader;
-        }
+        protected override ShaderType Type() => ShaderType.VertexShader;
     }
 }

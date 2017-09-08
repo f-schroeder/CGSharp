@@ -12,9 +12,6 @@ namespace CGSharp.Shaders
         {
         }
 
-        protected override ShaderType Type()
-        {
-            return ShaderType.GeometryShader;
-        }
+        protected override ShaderType Type() => ShaderType.GeometryShader;
     }
 }
