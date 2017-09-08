@@ -83,5 +83,19 @@ namespace CGSharp.Shaders
             GL.BindBuffer(BufferTarget.DispatchIndirectBuffer, _indirectBufferID);
             GL.DispatchComputeIndirect(IntPtr.Zero);
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\nComputeShader: Work group size " + _workGroupSize;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                GL.DeleteBuffers(1, ref _indirectBufferID);
+            }
+            base.Dispose(disposing);
+        }
     }
 }

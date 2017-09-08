@@ -1,12 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using OpenTK.Graphics.OpenGL;
+using Boolean = OpenTK.Graphics.OpenGL.Boolean;
 
 //TODO: Documentation!
 
 namespace CGSharp.Shaders
 {
-    public abstract class Shader
+    public abstract class Shader : IDisposable
     {
         public int ID { get; protected set; }
 
@@ -60,6 +62,20 @@ namespace CGSharp.Shaders
 
                 throw new ShaderException("Error: Shader compilation failed. \n" + infoLog);
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                GL.DeleteShader(ID);
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

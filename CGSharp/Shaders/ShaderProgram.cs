@@ -12,7 +12,7 @@ using Boolean = OpenTK.Graphics.OpenGL.Boolean;
 
 namespace CGSharp.Shaders
 {
-    public class ShaderProgram
+    public class ShaderProgram : IDisposable
     {
         public int ID { get; protected set; }
 
@@ -150,6 +150,19 @@ namespace CGSharp.Shaders
             GL.ProgramUniformMatrix4(ID, Uniforms[name], false, ref value);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                GL.DeleteProgram(ID);
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }
 
