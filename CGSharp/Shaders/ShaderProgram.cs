@@ -4,8 +4,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using Boolean = OpenTK.Graphics.OpenGL.Boolean;
+using OpenTK.Graphics.OpenGL4;
+using Boolean = OpenTK.Graphics.OpenGL4.Boolean;
 
 //TODO: Documentation!
 //TODO: Extract program inputs and outputs? --> automatic FBO and VBO/VAO creation?

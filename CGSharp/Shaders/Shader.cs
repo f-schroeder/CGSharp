@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using OpenTK.Graphics.OpenGL;
-using Boolean = OpenTK.Graphics.OpenGL.Boolean;
+using OpenTK.Graphics.OpenGL4;
+using Boolean = OpenTK.Graphics.OpenGL4.Boolean;
 
 //TODO: Documentation!
 
@@ -26,7 +26,7 @@ namespace CGSharp.Shaders
                 string includeSource = File.ReadAllText(includePath);
                 string includeName = "/" + Path.GetFileName(includePath);
 
-                GL.Arb.NamedString(ArbShadingLanguageInclude.ShaderIncludeArb, includeName.Length, includeName, includeSource.Length, includeSource);
+                GL.Arb.NamedString(All.ShaderIncludeArb, includeName.Length, includeName, includeSource.Length, includeSource);
                 if (!GL.Arb.IsNamedString(includeName.Length, includeName))
                     throw new ShaderException("Error: Coud not create named string for shader includes.");
 
