@@ -2,6 +2,7 @@
 
 namespace CGSharp.Shaders
 {
+    /// <summary>Base class for tesselation evaluation shaders. See <see cref="Shader"/> for more information.</summary>
     public class TesselationEvaluationShader : Shader
     {
         public TesselationEvaluationShader(string shaderSource) : base(shaderSource)

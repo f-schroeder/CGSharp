@@ -2,6 +2,7 @@
 
 namespace CGSharp.Shaders
 {
+    /// <summary>Base class for geometry shaders. See <see cref="Shader"/> for more information.</summary>
     public class GeometryShader: Shader
     {
         public GeometryShader(string shaderSource) : base(shaderSource)

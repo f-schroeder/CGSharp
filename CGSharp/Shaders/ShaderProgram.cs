@@ -7,19 +7,43 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Boolean = OpenTK.Graphics.OpenGL4.Boolean;
 
-//TODO: Documentation!
 //TODO: Extract program inputs and outputs? --> automatic FBO and VBO/VAO creation?
-//TODO: differentiate extracted uniforms between numbers, samplers ans images
+//TODO: differentiate extracted uniforms between numbers, samplers and images
 
 namespace CGSharp.Shaders
 {
+    /// <summary>
+    /// Base class for shader programs.
+    /// Creates and handles a shader program from one or more shader stages (<see cref="Shader"/>).
+    /// Extracts uniform and buffer variables from the shader program.
+    /// Also checks for linking errors. 
+    /// As it allocates GPU resources, you should dispose it once it's no longer needed.
+    /// 
+    /// To set uniform variables, use the extracted uniform locations and the SetUniform() expressions provided by this class.
+    /// To bind buffers, use the extracted buffer bindings provided by this class.
+    /// </summary>
     public class ShaderProgram : IDisposable
     {
+        /// <summary>The OpenGL handle for this shader program</summary>
         public int ID { get; protected set; }
 
+        /// <summary>
+        /// The extracted uniforms from the shader program. 
+        /// Use these instead of querying them separately with GL.GetUniformLocation() as they have less overhead.
+        /// Key is the name of the uniform variable.
+        /// Value is the uniform location.
+        /// </summary>
         public ReadOnlyDictionary<string, int> Uniforms { get; protected set; }
+
+        /// <summary>
+        /// The extracted buffers from the shader program.
+        /// Key is the name of the buffer variable.
+        /// Value is the binding point of the buffer.
+        /// </summary>
         public ReadOnlyDictionary<string, int> Buffers { get; protected set; }
 
+        /// <summary>Constructor for creating a shader program with the specified shaders.</summary> 
+        /// <param name="shaders">Array of shaders representing the shader stages for the shader program.</param>
         public ShaderProgram(Shader[] shaders)
         {
             CreateProgram(shaders);
@@ -27,6 +51,7 @@ namespace CGSharp.Shaders
             ExtractBuffers();
         }
 
+        /// <summary>Performs introspection on the shader program to extract all defined uniform variables.</summary>
         protected void ExtractUniforms()
         {
             var uniforms = new Dictionary<string, int>();
@@ -57,6 +82,7 @@ namespace CGSharp.Shaders
             Debug.WriteLine("ShaderProgram: Found " + uniforms.Count + " uniforms.", "INFO");
         }
 
+        /// <summary>Performs introspection on the shader program to extract all defined buffer variables.</summary>
         protected void ExtractBuffers()
         {
             var buffers = new Dictionary<string, int>();
@@ -87,6 +113,8 @@ namespace CGSharp.Shaders
             Debug.WriteLine("ShaderProgram: Found " + buffers.Count + " buffers.", "INFO");
         }
 
+        /// <summary>Creates the OpenGL shader program.</summary>
+        /// <param name="shaders">The shader stages to use for the shader program.</param>
         protected void CreateProgram(Shader[] shaders)
         {
             ID = GL.CreateProgram();
@@ -101,6 +129,9 @@ namespace CGSharp.Shaders
             Debug.WriteLine("ShaderProgram: Created shader program with " + shaders.Length + " shader stages.", "INFO");
         }
 
+        /// <summary>Checks if shader program linking was successful.</summary>
+        /// <param name="shaders">The used shader stages of the shader program.</param>
+        /// <exception cref="ShaderException">Thrown if linking failed.</exception>
         protected void CheckLinkingErrors(Shader[] shaders)
         {
             int isLinked;
@@ -134,6 +165,10 @@ namespace CGSharp.Shaders
 
         #endregion
 
+        /// <summary>
+        /// Override this function if you have to destroy other OpenGL resources.
+        /// Called from public Dispose() function.
+        /// </summary>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -142,6 +177,7 @@ namespace CGSharp.Shaders
             }
         }
 
+        /// <summary>Call Dispose() to free/delete allocated GPU and/or OpenGL resources.</summary> 
         public void Dispose()
         {
             Dispose(true);

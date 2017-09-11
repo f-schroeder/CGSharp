@@ -1,6 +1,7 @@
 ﻿
 namespace CGSharp.Shaders
 {
+    /// <summary>Class for exceptions regarding shader compilation and linking.</summary>
     public class ShaderException : System.Exception
     {
         public ShaderException() : base() { }

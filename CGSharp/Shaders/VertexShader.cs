@@ -2,6 +2,7 @@
 
 namespace CGSharp.Shaders
 {
+    /// <summary>Base class for vertex shaders. See <see cref="Shader"/> for more information.</summary>
     public class VertexShader : Shader
     {
         public VertexShader(string shaderSource) : base(shaderSource)
