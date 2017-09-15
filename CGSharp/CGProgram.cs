@@ -37,8 +37,21 @@ namespace CGSharp
 
         /// <summary>Program state: The active camera for rendering.</summary>
         public Camera ActiveCamera { get; set; }
-        /// <summary>Program state: The active shader for rendering or compute.</summary>
-        public ShaderProgram ActiveShader { get; set; }
+
+        private ShaderProgram _activeShader;
+        /// <summary>
+        /// Program state: The active shader for rendering or compute.
+        /// By setting this property, the shader program gets bound to the OpenGL context (GL.UseProgram()).
+        /// </summary>
+        public ShaderProgram ActiveShader {
+            get => _activeShader;
+            set
+            {
+                _activeShader = value;
+                GL.UseProgram(_activeShader.ID);
+            }
+        }
+
         /// <summary>Program state: The active scene for rendering.</summary>
         public Scene ActiveScene { get; set; }
 

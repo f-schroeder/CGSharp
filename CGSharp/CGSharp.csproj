@@ -76,6 +76,8 @@
     <Compile Include="Buffers\Buffer.cs" />
     <Compile Include="Buffers\FBO.cs" />
     <Compile Include="Buffers\SSBO.cs" />
+    <Compile Include="Buffers\Structs.cs" />
+    <Compile Include="Buffers\TypedBuffer.cs" />
     <Compile Include="Buffers\VAO.cs" />
     <Compile Include="Buffers\VBO.cs" />
     <Compile Include="CGProgram.cs" />
