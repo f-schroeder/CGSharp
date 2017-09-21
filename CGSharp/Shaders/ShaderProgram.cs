@@ -7,7 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using Boolean = OpenTK.Graphics.OpenGL4.Boolean;
 
 //TODO: Extract program inputs and outputs? --> automatic FBO and VBO/VAO creation?
-//TODO: differentiate extracted uniforms between numbers, samplers and images
+//TODO: differentiate extracted uniforms between numbers, samplers and images?
 
 namespace CGSharp.Shaders
 {
@@ -18,7 +18,7 @@ namespace CGSharp.Shaders
     /// Also checks for linking errors. 
     /// As it allocates GPU resources, you should dispose it once it's no longer needed.
     /// 
-    /// To set uniform variables, use the extracted uniform locations and the SetUniform() expressions provided by this class.
+    /// To set uniform variables, use the extracted uniform objects.
     /// To bind buffers, use the extracted buffer bindings provided by this class.
     /// </summary>
     public class ShaderProgram : IDisposable

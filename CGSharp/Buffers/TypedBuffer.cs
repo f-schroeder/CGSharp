@@ -4,6 +4,13 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace CGSharp.Buffers
 {
+    /// <summary>
+    /// Typed Buffers use a generic field Data to store and handle the data of the buffer.
+    /// The data is stored as array and can be modified.
+    /// This class also keeps track of the number of elements inside the buffer.
+    /// As only structs are accepted, consider using the helper structs <see cref="CGSharp.Buffers.Int"/> etc. if the buffer should only contain single numbers.
+    /// </summary>
+    /// <typeparam name="T">The type of the buffer (must be a struct).</typeparam>
     public class TypedBuffer<T> : Buffer where T : struct
     {
 
