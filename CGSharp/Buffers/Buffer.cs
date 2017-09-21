@@ -70,6 +70,7 @@ namespace CGSharp.Buffers
         /// <summary>
         /// Binds the specified buffer to the specified target.
         /// Keeps track of already bound buffers to avoid re-binding the buffer.
+        /// Warning: Do not use this function frequently as it requires state changes. Use BindBase() whenever possible.
         /// </summary>
         /// <param name="target">The buffer target to which the buffer gets bound.</param>
         /// <param name="bufferID">The OpenGL handle for the buffer that gets bound.</param>
@@ -85,6 +86,7 @@ namespace CGSharp.Buffers
         /// <summary>
         /// Binds the specified buffer to the specified target.
         /// Keeps track of already bound buffers to avoid re-binding the buffer.
+        /// Warning: Do not use this function frequently as it requires state changes. Use BindBase() whenever possible.
         /// </summary>
         /// <param name="target">The buffer target to which the buffer gets bound.</param>
         /// <param name="buffer">The buffer that gets bound.</param>
@@ -100,6 +102,7 @@ namespace CGSharp.Buffers
         /// <summary>
         /// Binds this buffer to the specified target.
         /// Keeps track of already bound buffers to avoid re-binding the buffer.
+        /// Warning: Do not use this function frequently as it requires state changes. Use BindBase() whenever possible.
         /// </summary>
         /// <param name="target">The buffer target to which the buffer gets bound.</param>
         public void Bind(BufferTarget target)
@@ -114,6 +117,7 @@ namespace CGSharp.Buffers
         /// <summary>
         /// Binds this buffer to this buffers target.
         /// Keeps track of already bound buffers to avoid re-binding the buffer.
+        /// Warning: Do not use this function frequently as it requires state changes. Use BindBase() whenever possible.
         /// </summary>
         public void Bind()
         {
