@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Text;
-using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using Boolean = OpenTK.Graphics.OpenGL4.Boolean;
 
@@ -31,9 +30,10 @@ namespace CGSharp.Shaders
         /// The extracted uniforms from the shader program. 
         /// Use these instead of querying them separately with GL.GetUniformLocation() as they have less overhead.
         /// Key is the name of the uniform variable.
-        /// Value is the uniform location.
+        /// Value is the Uniform object containing the location. 
+        /// Use SetData() and Update() from <see cref="IUniform"/> to manipulate the data contained in the uniform.
         /// </summary>
-        public ReadOnlyDictionary<string, int> Uniforms { get; protected set; }
+        public ReadOnlyDictionary<string, IUniform> Uniforms { get; protected set; }
 
         /// <summary>
         /// The extracted buffers from the shader program.
@@ -51,10 +51,18 @@ namespace CGSharp.Shaders
             ExtractBuffers();
         }
 
+        public void UpdateUniforms()
+        {
+            foreach (var keyValuePair in Uniforms)
+            {
+                keyValuePair.Value.Update();
+            }
+        }
+
         /// <summary>Performs introspection on the shader program to extract all defined uniform variables.</summary>
         protected void ExtractUniforms()
         {
-            var uniforms = new Dictionary<string, int>();
+            var uniforms = new Dictionary<string, IUniform>();
 
             int numUniforms;
             GL.GetProgramInterface(ID, ProgramInterface.Uniform, ProgramInterfaceParameter.ActiveResources, out numUniforms);
@@ -75,10 +83,10 @@ namespace CGSharp.Shaders
                 GL.GetProgramResourceName(ID, ProgramInterface.Uniform, uniformID, values[2], out int _, name);
                 #pragma warning restore 618
 
-                uniforms[name.ToString()] = values[3];
+                uniforms[name.ToString()] = UniformFactory.MakeUniformFromOpenGlType((ActiveUniformType) values[1], name.ToString(), ID, values[3]);
             }
 
-            Uniforms = new ReadOnlyDictionary<string, int>(uniforms);
+            Uniforms = new ReadOnlyDictionary<string, IUniform>(uniforms);
             Debug.WriteLine("ShaderProgram: Found " + uniforms.Count + " uniforms.", "INFO");
         }
 
@@ -146,24 +154,6 @@ namespace CGSharp.Shaders
                 throw new ShaderException("Error: Shader linking failed. \n" + infoLog);
             }
         }
-
-        #region SetUniform expressions
-
-        public void SetUniform(string name, int value) => GL.ProgramUniform1(ID, Uniforms[name], value);
-
-        public void SetUniform(string name, float value) => GL.ProgramUniform1(ID, Uniforms[name], value);
-
-        public void SetUniform(string name, ref Vector2 value) => GL.ProgramUniform2(ID, Uniforms[name], ref value);
-
-        public void SetUniform(string name, ref Vector3 value) => GL.ProgramUniform3(ID, Uniforms[name], ref value);
-
-        public void SetUniform(string name, ref Vector4 value) => GL.ProgramUniform4(ID, Uniforms[name], ref value);
-
-        public void SetUniform(string name, ref Matrix3 value) => GL.ProgramUniformMatrix3(ID, Uniforms[name], false, ref value);
-
-        public void SetUniform(string name, ref Matrix4 value) => GL.ProgramUniformMatrix4(ID, Uniforms[name], false, ref value);
-
-        #endregion
 
         /// <summary>
         /// Override this function if you have to destroy other OpenGL resources.

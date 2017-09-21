@@ -98,11 +98,13 @@
     <Compile Include="Shaders\ComputeShader.cs" />
     <Compile Include="Shaders\FragmentShader.cs" />
     <Compile Include="Shaders\GeometryShader.cs" />
+    <Compile Include="Shaders\IUniform.cs" />
     <Compile Include="Shaders\Shader.cs" />
     <Compile Include="Shaders\ShaderException.cs" />
     <Compile Include="Shaders\ShaderProgram.cs" />
     <Compile Include="Shaders\TesselationControlShader.cs" />
     <Compile Include="Shaders\TesselationEvaluationShader.cs" />
+    <Compile Include="Shaders\Uniform.cs" />
     <Compile Include="Shaders\VertexShader.cs" />
     <Compile Include="Textures\Image.cs" />
     <Compile Include="Textures\Texture.cs" />
