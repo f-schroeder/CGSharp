@@ -51,6 +51,18 @@ namespace CGSharp.Shaders
             ExtractBuffers();
         }
 
+        /// <summary>
+        /// Updates the parameters of the shader program (i.e. uniforms and buffers).
+        /// </summary>
+        public virtual void Update()
+        {
+            UpdateUniforms();
+            //TODO: UpdateBuffers();
+        }
+
+        /// <summary>
+        /// Updates the uniform variables of the shader program.
+        /// </summary>
         public void UpdateUniforms()
         {
             foreach (var keyValuePair in Uniforms)

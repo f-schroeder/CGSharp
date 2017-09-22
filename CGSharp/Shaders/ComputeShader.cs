@@ -3,8 +3,6 @@ using System.Diagnostics;
 using CGSharp.Buffers;
 using OpenTK.Graphics.OpenGL4;
 
-//TODO: Use Buffer class for indirect dispatch buffer!
-
 namespace CGSharp.Shaders
 {
     /// <summary>

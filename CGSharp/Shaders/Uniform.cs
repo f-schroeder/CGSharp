@@ -5,12 +5,35 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace CGSharp.Shaders
 {
+    /// <summary>
+    /// Class for managing a OpenGL uniform variable inside a shader.
+    /// Contains the name, shader program, location and data of the uniform.
+    /// Supports the following number data types: float, double, int, uint, UInt64.
+    /// Supports the following floating-point vector data types: <see cref="Vector2"/>, <see cref="Vector3"/>, <see cref="Vector4"/>.
+    /// Supports the following floating-point matrix data types: <see cref="Matrix2"/>, <see cref="Matrix3"/>, <see cref="Matrix4"/>.
+    /// For bindless textures and images use the GPU adress as UInt64.
+    /// </summary>
+    /// <typeparam name="T">The type of the data inside the uniform.</typeparam>
     public class Uniform<T> : IUniform
     {
+        /// <summary>
+        /// The literal name of the uniform inside the shader.
+        /// </summary>
         public string Name;
+
+        /// <summary>
+        /// The corresponding shader program ID this uniform belongs to.
+        /// </summary>
         public int ProgramID;
+
+        /// <summary>
+        /// The uniform location inside the shader program.
+        /// </summary>
         public int Location;
 
+        /// <summary>
+        /// The data stored in the uniform and passed to the shader program.
+        /// </summary>
         public T Data
         {
             get => _data;
@@ -25,12 +48,26 @@ namespace CGSharp.Shaders
         private bool _dataChanged;
         private T _data;
 
+        /// <summary>
+        /// Updates the uniform data in the shader program (i.e. pushes it to the GPU).
+        /// Only does so if the data changed since the last call of Update().
+        /// </summary>
         public void Update()
         {
             if (_dataChanged)
+            {
                 _glProgramUniformFunction.Invoke();
+                _dataChanged = false;
+            }
         }
 
+        /// <summary>
+        /// Sets the data contained in the uniform.
+        /// Alternative to setting the Data property directly.
+        /// Provided by interface, no cast required.
+        /// </summary>
+        /// <typeparam name="TData">Type of the data. Must be the same as the generic type of the Uniform object.</typeparam>
+        /// <param name="newData">The new data for the uniform.</param>
         public void SetData<TData>(TData newData)
         {
             if (typeof(TData) == typeof(T))
@@ -39,6 +76,13 @@ namespace CGSharp.Shaders
                 throw new ArgumentException("Error: Called Uniform.SetData with wrong Type.");
         }
 
+        /// <summary>
+        /// Constructor for a Uniform object.
+        /// Chooses the right GL.ProgramUniform... function depending on the generic type of the Uniform.
+        /// </summary>
+        /// <param name="uniformName">The literal name of the uniform inside the shader.</param>
+        /// <param name="programID">The shader program this uniform belongs to.</param>
+        /// <param name="uniformLocation">The uniform location in the shader program.</param>
         public Uniform(string uniformName, int programID, int uniformLocation)
         {
             Name = uniformName;
@@ -85,12 +129,24 @@ namespace CGSharp.Shaders
         }
     }
 
+    /// <summary>
+    /// Calss containing static factory methods for crating <see cref="IUniform"/> objects.
+    /// </summary>
     public abstract class UniformFactory
     {
         private UniformFactory()
         {
         }
 
+        /// <summary>
+        /// Creates a <see cref="Uniform{T}"/> with a given type parameter provided by OpenGL introspection.
+        /// If the type doesn't match the supported types in <see cref="Uniform{T}"/>, it will be created with the type <see cref="UInt64"/>.
+        /// </summary>
+        /// <param name="type">The OpenGL type representation of the uniform.</param>
+        /// <param name="uniformName">The literal name of the uniform inside the shader.</param>
+        /// <param name="programID">The shader program this uniform belongs to.</param>
+        /// <param name="uniformLocation">The uniform location in the shader program.</param>
+        /// <returns></returns>
         public static IUniform MakeUniformFromOpenGlType(ActiveUniformType type, string uniformName, int programID,
             int uniformLocation)
         {

@@ -16,6 +16,10 @@ namespace CGSharp.Buffers
 
         private int _elementCount;
 
+        /// <summary>
+        /// Number of elements in the data array of this buffer.
+        /// By setting this property, the buffer gets resized and the data inside it may get broken or even wiped.
+        /// </summary>
         public int ElementCount
         {
             get => _elementCount;
@@ -28,6 +32,9 @@ namespace CGSharp.Buffers
             }
         }
 
+        /// <summary>
+        /// The data array contained in this buffer.
+        /// </summary>
         public T[] Data
         {
             get
@@ -39,11 +46,20 @@ namespace CGSharp.Buffers
             set => GL.NamedBufferSubData(ID, IntPtr.Zero, Size, value);
         }
 
+        /// <summary>
+        /// Constructor for a typed buffer with one element.
+        /// </summary>
+        /// <param name="bufferTarget">The target to which the buffer gets bound.</param>
         public TypedBuffer(BufferTarget bufferTarget) : base(bufferTarget, Marshal.SizeOf(typeof(T)))
         {
             ElementCount = 1;
         }
 
+        /// <summary>
+        /// Constructor for a typed buffer with a given number of elements.
+        /// </summary>
+        /// <param name="bufferTarget">The target to which the buffer gets bound.</param>
+        /// <param name="elementCount">The number of elements in the data array.</param>
         public TypedBuffer(BufferTarget bufferTarget, int elementCount) : base(bufferTarget, elementCount * Marshal.SizeOf(typeof(T)))
         {
             if (elementCount < 0)
@@ -51,6 +67,11 @@ namespace CGSharp.Buffers
             _elementCount = elementCount;
         }
 
+        /// <summary>
+        /// Clears the entire buffer.
+        /// Warning: Not tested yet!
+        /// </summary>
+        /// <param name="clearVal">The value that gets written into the whole buffer.</param>
         public virtual void Clear(T clearVal)
         {
             GL.ClearNamedBufferData(ID, PixelInternalFormat.R32f, PixelFormat.Red, All.Float, ref clearVal);

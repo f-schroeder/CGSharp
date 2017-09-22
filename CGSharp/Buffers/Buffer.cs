@@ -16,7 +16,10 @@ namespace CGSharp.Buffers
         private int _bufferID;
         private int _size;
 
-        /// <summary>The Size of this buffer in bytes.</summary>
+        /// <summary>
+        /// The Size of this buffer in bytes. 
+        /// By setting this property, the buffer gets resized and the data inside it may get broken or even wiped.
+        /// </summary>
         public int Size
         {
             get => _size;
