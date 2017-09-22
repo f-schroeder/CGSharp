@@ -36,7 +36,7 @@
       <HintPath>..\packages\AssimpNet.3.3.2\lib\net45\AssimpNet.dll</HintPath>
     </Reference>
     <Reference Include="ImGui.NET, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ImGui.NET.0.2.1\lib\netstandard1.1\ImGui.NET.dll</HintPath>
+      <HintPath>..\packages\ImGui.NET.0.3.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
