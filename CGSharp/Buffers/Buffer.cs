@@ -39,9 +39,9 @@ namespace CGSharp.Buffers
         /// <summary>
         /// Constructor for creating a Buffer for a given buffer target with a given size.
         /// </summary>
-        /// <param name="bufferTarget">The target to which the buffer gets bound.</param>
-        /// <param name="bufferSize">The size of the GPU storage that will be allocated for this buffer in bytes.</param>
-        public Buffer(BufferTarget bufferTarget, int bufferSize)
+        /// <param name="bufferSize">The size of the GPU storage that will be allocated for this buffer in bytes. Default: 4.</param>
+        /// <param name="bufferTarget">The target to which the buffer gets bound. Default: ShaderStorageBuffer.</param>
+        public Buffer(int bufferSize = 4, BufferTarget bufferTarget = BufferTarget.ShaderStorageBuffer)
         {
             if(bufferSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(bufferSize), "Negative buffer size not allowed!");

@@ -47,24 +47,26 @@ namespace CGSharp.Buffers
         }
 
         /// <summary>
-        /// Constructor for a typed buffer with one element.
+        /// Constructor for a typed buffer with the given data array inside.
         /// </summary>
-        /// <param name="bufferTarget">The target to which the buffer gets bound.</param>
-        public TypedBuffer(BufferTarget bufferTarget) : base(bufferTarget, Marshal.SizeOf(typeof(T)))
+        /// <param name="bufferData">The data inside the buffer.</param>
+        /// <param name="bufferTarget">The target to which the buffer gets bound. Default: ShaderStorageBuffer.</param>
+        public TypedBuffer(T[] bufferData, BufferTarget bufferTarget = BufferTarget.ShaderStorageBuffer) : base(bufferData.Length * Marshal.SizeOf(typeof(T)), bufferTarget)
         {
-            ElementCount = 1;
+            Data = bufferData;
         }
 
         /// <summary>
         /// Constructor for a typed buffer with a given number of elements.
         /// </summary>
-        /// <param name="bufferTarget">The target to which the buffer gets bound.</param>
-        /// <param name="elementCount">The number of elements in the data array.</param>
-        public TypedBuffer(BufferTarget bufferTarget, int elementCount) : base(bufferTarget, elementCount * Marshal.SizeOf(typeof(T)))
+        /// <param name="elementCount">The number of elements in the data array. Default: 1.</param>
+        /// <param name="bufferTarget">The target to which the buffer gets bound. Default: ShaderStorageBuffer.</param>
+        public TypedBuffer(int elementCount = 1, BufferTarget bufferTarget = BufferTarget.ShaderStorageBuffer) : base(elementCount * Marshal.SizeOf(typeof(T)), bufferTarget)
         {
             if (elementCount < 0)
                 throw new ArgumentOutOfRangeException(nameof(elementCount), "Negative element count not allowed!");
             _elementCount = elementCount;
+            Data = new T[elementCount];
         }
 
         /// <summary>
