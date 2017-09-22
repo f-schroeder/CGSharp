@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using OpenTK.Graphics.OpenGL4;
 
 namespace CGSharp.Buffers
@@ -113,15 +114,16 @@ namespace CGSharp.Buffers
         /// Keeps track of already bound buffers to avoid re-binding the buffer.
         /// Warning: Do not use this function frequently as it requires state changes. Use BindBase() whenever possible.
         /// </summary>
-        /// <param name="target">The buffer target to which the buffer gets bound.</param>
+        /// <param name="bufferTarget">The buffer target to which the buffer gets bound.</param>
         /// <param name="bufferID">The OpenGL handle for the buffer that gets bound.</param>
-        public static void Bind(BufferTarget target, int bufferID)
+        public static void Bind(BufferTarget bufferTarget, int bufferID)
         {
-            if (BoundBuffers[target] != bufferID)
+            if (BoundBuffers[bufferTarget] != bufferID)
             {
-                BoundBuffers[target] = bufferID;
-                GL.BindBuffer(target, bufferID);
+                BoundBuffers[bufferTarget] = bufferID;
+                GL.BindBuffer(bufferTarget, bufferID);
             }
+            BindWarning(bufferTarget);
         }
 
         /// <summary>
@@ -129,15 +131,16 @@ namespace CGSharp.Buffers
         /// Keeps track of already bound buffers to avoid re-binding the buffer.
         /// Warning: Do not use this function frequently as it requires state changes. Use BindBase() whenever possible.
         /// </summary>
-        /// <param name="target">The buffer target to which the buffer gets bound.</param>
+        /// <param name="bufferTarget">The buffer target to which the buffer gets bound.</param>
         /// <param name="buffer">The buffer that gets bound.</param>
-        public static void Bind(BufferTarget target, Buffer buffer)
+        public static void Bind(BufferTarget bufferTarget, Buffer buffer)
         {
-            if (BoundBuffers[target] != buffer.ID)
+            if (BoundBuffers[bufferTarget] != buffer.ID)
             {
-                BoundBuffers[target] = buffer.ID;
-                GL.BindBuffer(target, buffer.ID);
+                BoundBuffers[bufferTarget] = buffer.ID;
+                GL.BindBuffer(bufferTarget, buffer.ID);
             }
+            BindWarning(bufferTarget);
         }
 
         /// <summary>
@@ -145,14 +148,15 @@ namespace CGSharp.Buffers
         /// Keeps track of already bound buffers to avoid re-binding the buffer.
         /// Warning: Do not use this function frequently as it requires state changes. Use BindBase() whenever possible.
         /// </summary>
-        /// <param name="target">The buffer target to which the buffer gets bound.</param>
-        public void Bind(BufferTarget target)
+        /// <param name="bufferTarget">The buffer target to which the buffer gets bound.</param>
+        public void Bind(BufferTarget bufferTarget)
         {
-            if (BoundBuffers[target] != ID)
+            if (BoundBuffers[bufferTarget] != ID)
             {
-                BoundBuffers[target] = ID;
-                GL.BindBuffer(target, ID);
+                BoundBuffers[bufferTarget] = ID;
+                GL.BindBuffer(bufferTarget, ID);
             }
+            BindWarning(bufferTarget);
         }
 
         /// <summary>
@@ -167,6 +171,17 @@ namespace CGSharp.Buffers
                 BoundBuffers[Target] = ID;
                 GL.BindBuffer(Target, ID);
             }
+            BindWarning(Target);
+        }
+
+        [Conditional("DEBUG")]
+        private static void BindWarning(BufferTarget bufferTarget)
+        {
+            if (bufferTarget == BufferTarget.ShaderStorageBuffer || bufferTarget == BufferTarget.AtomicCounterBuffer ||
+                    bufferTarget == BufferTarget.UniformBuffer || bufferTarget == BufferTarget.TransformFeedbackBuffer)
+                {
+                    Debug.WriteLine("Used Buffer.Bind() with target " + bufferTarget + ". Use Buffer.BindBase() instead for this target!", "WARNING");
+                }
         }
 
         #endregion
