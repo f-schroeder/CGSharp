@@ -173,7 +173,8 @@ namespace CGSharp.Shaders
                 case ActiveUniformType.FloatMat4:
                     return new Uniform<Matrix4>(uniformName, programID, uniformLocation);
                 default:
-                    Debug.WriteLine("Created uniform object [" + uniformName + "] of type UInt64 for type parameter " + type + ".", "INFO");
+                    Debug.WriteLine("Created uniform object [" + uniformName + "] of type UInt64 for type parameter " + type + ". " +
+                                    "If you want to use samplers or images, pass their address as uniform UInt64 (i.e. use bindless OpenGL).", "INFO");
                     return new Uniform<UInt64>(uniformName, programID, uniformLocation);
             }
         }
