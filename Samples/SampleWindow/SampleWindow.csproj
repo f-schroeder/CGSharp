@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,7 +55,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CGSharp\CGSharp.csproj">
+    <ProjectReference Include="..\..\CGSharp\CGSharp.csproj">
       <Project>{b4962d42-dc1c-4fa2-99b0-2aede7cde4f8}</Project>
       <Name>CGSharp</Name>
     </ProjectReference>
