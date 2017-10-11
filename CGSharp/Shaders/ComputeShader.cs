@@ -61,7 +61,7 @@ namespace CGSharp.Shaders
         /// <summary>Creates the buffer for the dispatch indirect information.</summary>
         protected void CreateIndirectBuffer()
         {
-            _indirectBuffer = new TypedBuffer<ComputeGroupSize>(new[] { _workGroupSize }, BufferTarget.DispatchIndirectBuffer);
+            _indirectBuffer = new TypedBuffer<ComputeGroupSize>("DispatchIndirectBuffer", new[] { _workGroupSize }, BufferTarget.DispatchIndirectBuffer);
 
             Debug.WriteLine("ComputeShader: Created dispatch indirect buffer.", "INFO");
         }

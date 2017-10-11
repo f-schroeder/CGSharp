@@ -8,10 +8,10 @@ namespace CGSharp.Shaders
     /// <summary>
     /// Class for managing a OpenGL uniform variable inside a shader.
     /// Contains the name, shader program, location and data of the uniform.
-    /// Supports the following number data types: float, double, int, uint, UInt64.
+    /// Supports the following number data types: float, double, int, uint, ulong.
     /// Supports the following floating-point vector data types: <see cref="Vector2"/>, <see cref="Vector3"/>, <see cref="Vector4"/>.
     /// Supports the following floating-point matrix data types: <see cref="Matrix2"/>, <see cref="Matrix3"/>, <see cref="Matrix4"/>.
-    /// For bindless textures and images use the GPU adress as UInt64.
+    /// For bindless textures and images use the GPU adress as ulong.
     /// </summary>
     /// <typeparam name="T">The type of the data inside the uniform.</typeparam>
     public class Uniform<T> : IUniform
@@ -97,7 +97,7 @@ namespace CGSharp.Shaders
                 _glProgramUniformFunction = () => GL.ProgramUniform1(ProgramID, Location, Convert.ToInt32(Data));
             else if (typeof(T) == typeof(uint))
                 _glProgramUniformFunction = () => GL.ProgramUniform1(ProgramID, Location, Convert.ToUInt32(Data));
-            else if (typeof(T) == typeof(UInt64))
+            else if (typeof(T) == typeof(ulong))
                 _glProgramUniformFunction = () => GL.ProgramUniform1(ProgramID, Location, Convert.ToUInt64(Data));
             else if (typeof(T) == typeof(Vector2))
                 _glProgramUniformFunction = () => GL.ProgramUniform2(ProgramID, Location,
@@ -173,9 +173,9 @@ namespace CGSharp.Shaders
                 case ActiveUniformType.FloatMat4:
                     return new Uniform<Matrix4>(uniformName, programID, uniformLocation);
                 default:
-                    Debug.WriteLine("Created uniform object [" + uniformName + "] of type UInt64 for type parameter " + type + ". " +
+                    Debug.WriteLine("Created uniform object [" + uniformName + "] of type ulong (UInt64) for type parameter " + type + ". " +
                                     "If you want to use samplers or images, pass their address as uniform UInt64 (i.e. use bindless OpenGL).", "INFO");
-                    return new Uniform<UInt64>(uniformName, programID, uniformLocation);
+                    return new Uniform<ulong>(uniformName, programID, uniformLocation);
             }
         }
     }

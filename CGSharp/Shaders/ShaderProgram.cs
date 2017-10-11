@@ -5,9 +5,9 @@ using System.Diagnostics;
 using System.Text;
 using OpenTK.Graphics.OpenGL4;
 using Boolean = OpenTK.Graphics.OpenGL4.Boolean;
+using Buffer = CGSharp.Buffers.Buffer;
 
 //TODO: Extract program inputs and outputs? --> automatic FBO and VBO/VAO creation?
-//TODO: differentiate extracted uniforms between numbers, samplers and images?
 
 namespace CGSharp.Shaders
 {
@@ -57,7 +57,7 @@ namespace CGSharp.Shaders
         public virtual void Update()
         {
             UpdateUniforms();
-            //TODO: UpdateBuffers();
+            UpdateBuffers();
         }
 
         /// <summary>
@@ -68,6 +68,21 @@ namespace CGSharp.Shaders
             foreach (var keyValuePair in Uniforms)
             {
                 keyValuePair.Value.Update();
+            }
+        }
+
+        /// <summary>
+        /// Updates all buffer variables of the shader program (i.e. 'BindBase' for all buffers)
+        /// </summary>
+        public void UpdateBuffers()
+        {
+            foreach (var keyValuePair in Buffers)
+            {
+                Buffer buffer;
+                if (Buffer.RegisteredBuffers.TryGetValue(keyValuePair.Key, out buffer))
+                {
+                    buffer.BindBase(keyValuePair.Value);
+                }
             }
         }
 

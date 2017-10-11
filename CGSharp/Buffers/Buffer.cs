@@ -1,7 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.OpenGL;
+using All = OpenTK.Graphics.OpenGL4.All;
+using BufferRangeTarget = OpenTK.Graphics.OpenGL4.BufferRangeTarget;
+using BufferStorageFlags = OpenTK.Graphics.OpenGL4.BufferStorageFlags;
+using BufferTarget = OpenTK.Graphics.OpenGL4.BufferTarget;
+using GL = OpenTK.Graphics.OpenGL4.GL;
+using MemoryBarrierFlags = OpenTK.Graphics.OpenGL4.MemoryBarrierFlags;
+using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
+using PixelInternalFormat = OpenTK.Graphics.OpenGL4.PixelInternalFormat;
 
 namespace CGSharp.Buffers
 {
@@ -13,9 +21,20 @@ namespace CGSharp.Buffers
     /// </summary>
     public class Buffer : IDisposable
     {
-        protected static readonly Dictionary<BufferTarget, int> BoundBuffers = new Dictionary<BufferTarget, int>();
+        protected static readonly Dictionary<BufferTarget, int> BoundBuffers = new Dictionary<BufferTarget, int>(); // Key: Buffer target, value: Buffer ID
+        protected static readonly Dictionary<int, int> BaseBoundBuffers = new Dictionary<int, int>(); // Key: Binding point, value: Buffer ID
         private int _bufferID;
         private int _size;
+        private ulong _gpuAddress;
+
+        /// <summary>All created Buffers are registered in this Dictionary by their name strings.</summary>
+        public static readonly Dictionary<string, Buffer> RegisteredBuffers = new Dictionary<string, Buffer>();
+
+        /// <summary>
+        /// The name of this buffer.
+        /// This name should be identical with its name inside the shader.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// The Size of this buffer in bytes. 
@@ -37,18 +56,24 @@ namespace CGSharp.Buffers
         /// <summary>The OpenGL binding target for this buffer.</summary>
         public BufferTarget Target { get; set; }
 
+        /// <summary>The address of this buffer on the GPU (for bindless buffers).</summary>
+        public ulong GpuAddress => GetGpuAddress();
+
         /// <summary>
         /// Constructor for creating a Buffer for a given buffer target with a given size.
         /// </summary>
+        /// <param name="bufferName">The name of the buffer. This name should be identical with the buffers name inside the shader.</param>
         /// <param name="bufferSize">The size of the GPU storage that will be allocated for this buffer in bytes. Default: 4.</param>
         /// <param name="bufferTarget">The target to which the buffer gets bound. Default: ShaderStorageBuffer.</param>
-        public Buffer(int bufferSize = 4, BufferTarget bufferTarget = BufferTarget.ShaderStorageBuffer)
+        public Buffer(string bufferName, int bufferSize = 4, BufferTarget bufferTarget = BufferTarget.ShaderStorageBuffer)
         {
             if(bufferSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(bufferSize), "Negative buffer size not allowed!");
 
             Target = bufferTarget;
             _size = bufferSize;
+            Name = bufferName;
+            RegisteredBuffers[Name] = this;
             CreateBuffer();
         }
 
@@ -83,9 +108,21 @@ namespace CGSharp.Buffers
             if (newSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(newSize), "Negative buffer size not allowed!");
 
-            GL.DeleteBuffer(_bufferID);
+            Delete();
             _size = newSize;
             CreateBuffer();
+        }
+
+        protected ulong GetGpuAddress()
+        {
+            //TODO: Test if all casts works properly!
+            if (_gpuAddress == 0)
+            {
+                OpenTK.Graphics.OpenGL.GL.NV.GetNamedBufferParameter((uint)ID,
+                    (BufferParameterName)NvShaderBufferLoad.BufferGpuAddressNv, out _gpuAddress);
+                OpenTK.Graphics.OpenGL.GL.NV.MakeNamedBufferResident(ID, (NvShaderBufferLoad)BufferAccess.ReadWrite);
+            }
+            return _gpuAddress;
         }
 
         #region BindBase
@@ -95,7 +132,14 @@ namespace CGSharp.Buffers
         /// Note that this is only possible for the following buffer targets: Atomic counter, transform feedback, uniform and shader storage.
         /// </summary>
         /// <param name="index">The binding point.</param>
-        public void BindBase(int index) => GL.BindBufferBase((BufferRangeTarget)Target, index, ID);
+        public void BindBase(int index)
+        {
+            if (BaseBoundBuffers[index] != ID)
+            {
+                BaseBoundBuffers[index] = ID;
+                GL.BindBufferBase((BufferRangeTarget) Target, index, ID);
+            }
+        }
 
         /// <summary>
         /// Binds the buffer object to a binding point in the the array of specified targets.
@@ -103,7 +147,14 @@ namespace CGSharp.Buffers
         /// </summary>
         /// <param name="index">The binding point.</param>
         /// <param name="bindTarget">The binding target.</param>
-        public void BindBase(int index, BufferRangeTarget bindTarget) => GL.BindBufferBase(bindTarget, index, ID);
+        public void BindBase(int index, BufferRangeTarget bindTarget)
+        {
+            if (BaseBoundBuffers[index] != ID)
+            {
+                BaseBoundBuffers[index] = ID;
+                GL.BindBufferBase(bindTarget, index, ID);
+            }
+        }
 
         #endregion
 
@@ -188,14 +239,26 @@ namespace CGSharp.Buffers
 
         public override string ToString()
         {
-            return "Buffer " + _bufferID + ": Size: " + _size + ", Target: " + Target;
+            return "Buffer " + Name + ": ID: " + _bufferID + ", Size: " + _size + ", Target: " + Target;
+        }
+
+        protected void Delete()
+        {
+            if (_gpuAddress != 0)
+            {
+                OpenTK.Graphics.OpenGL.GL.NV.MakeNamedBufferNonResident(ID);
+                _gpuAddress = 0;
+            }
+
+            GL.DeleteBuffer(_bufferID);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                GL.DeleteBuffer(_bufferID);
+                RegisteredBuffers.Remove(Name);
+                Delete();
             }
         }
 

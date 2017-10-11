@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System;
+using OpenTK.Graphics.OpenGL4;
 
 namespace CGSharp.Buffers
 {
-    class FBO : Buffer
+    public class FBO : Buffer
     {
+        public FBO(string bufferName, int bufferSize = 4, BufferTarget bufferTarget = BufferTarget.ShaderStorageBuffer) : base(bufferName, bufferSize, bufferTarget)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
