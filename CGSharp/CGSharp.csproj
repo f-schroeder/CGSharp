@@ -80,6 +80,7 @@
     <Compile Include="Shaders\VertexShader.cs" />
     <Compile Include="Textures\Image.cs" />
     <Compile Include="Textures\Texture.cs" />
+    <Compile Include="Utils\AssetManager.cs" />
     <Compile Include="Utils\Renderer.cs" />
   </ItemGroup>
   <ItemGroup>
